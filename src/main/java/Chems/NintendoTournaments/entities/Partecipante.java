@@ -2,6 +2,7 @@ package Chems.NintendoTournaments.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.UUID;
 
 @Entity
@@ -18,19 +19,15 @@ public class Partecipante {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "id_utente")
-    private Utente utente;
-
-    @ManyToOne
-    @JoinColumn(name = "id_torneo")
+    @JoinColumn(name = "torneo_id")
     private Torneo torneo;
 
-    private int posizione;  // Posizione finale nel torneo
+    @ManyToOne
+    @JoinColumn(name = "giocatore_id")
+    private Utente giocatore;
 
-    public Partecipante(Utente utente, Torneo torneo, int posizione) {
-        this.utente = utente;
+    public Partecipante(Torneo torneo, Utente giocatore) {
         this.torneo = torneo;
-        this.posizione = posizione;
+        this.giocatore = giocatore;
     }
 }
-
