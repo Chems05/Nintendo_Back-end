@@ -3,9 +3,10 @@ package Chems.NintendoTournaments.payloads;
 import Chems.NintendoTournaments.enums.RuoloUtente;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import java.util.UUID;
 
 public record UtenteDTO(
-        Long id,
+        UUID id, // Cambia da Long a UUID
         @NotEmpty(message = "L'email è obbligatoria.")
         @Email(message = "L'email non valida!")
         String email,

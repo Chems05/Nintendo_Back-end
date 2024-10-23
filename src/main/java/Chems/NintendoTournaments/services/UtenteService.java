@@ -6,6 +6,7 @@ import Chems.NintendoTournaments.exceptions.BadRequestException;
 import Chems.NintendoTournaments.exceptions.NotFoundException;
 import Chems.NintendoTournaments.payloads.UtenteDTO;
 import Chems.NintendoTournaments.repositories.UtenteRepository;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class UtenteService {
     }
 
     // Trova un utente per ID
-    public Utente findById(UUID id) {
+    public Utente findById(@NotNull UUID id) { // Corretto per accettare un singolo UUID
         return utenteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Utente con ID " + id + " non trovato."));
     }
@@ -51,7 +52,7 @@ public class UtenteService {
 
     // Aggiorna un utente
     public Utente updateUtente(UUID id, UtenteDTO utenteDTO) {
-        Utente utente = findById(id);
+        Utente utente = findById(id); // Ora passa un singolo UUID
 
         // Controllo se l'email esiste già per un altro utente
         Optional<Utente> utenteEsistente = utenteRepository.findByEmail(utenteDTO.email());
@@ -71,7 +72,7 @@ public class UtenteService {
 
     // Elimina un utente
     public void deleteUtente(UUID id) {
-        Utente utente = findById(id);
+        Utente utente = findById(id); // Corretto per accettare un singolo UUID
         utenteRepository.delete(utente);
     }
 

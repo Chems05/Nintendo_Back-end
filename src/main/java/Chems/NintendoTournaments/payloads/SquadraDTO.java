@@ -2,10 +2,13 @@ package Chems.NintendoTournaments.payloads;
 
 import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
+import java.util.UUID;
 
 public record SquadraDTO(
-        Long id,
+        UUID id,
         @NotEmpty(message = "Il nome della squadra è obbligatorio.")
         String nome,
-        List<GiocatoreDTO> giocatori // Lista di giocatori che compongono la squadra
+        UUID torneoId, // Aggiungi l'ID del torneo
+        List<UtenteDTO> giocatori // Elenco degli utenti nella squadra
 ) {}
+

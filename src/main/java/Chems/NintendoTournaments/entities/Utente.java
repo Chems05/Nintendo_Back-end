@@ -34,8 +34,8 @@ public class Utente implements UserDetails {
     @OneToMany(mappedBy = "organizzatore")
     private List<Torneo> torneiOrganizzati;
 
-    @OneToMany(mappedBy = "giocatore")
-    private List<Partecipante> partecipazioni;
+    @ManyToMany(mappedBy = "giocatori")  // Relazione ManyToMany per le partecipazioni
+    private List<Squadra> partecipazioni;
 
     // Metodo per ottenere le autorità (ruoli) dell'utente
     @Override
@@ -43,28 +43,6 @@ public class Utente implements UserDetails {
         // Restituisci l'autorità in base al ruolo dell'utente
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + ruolo.name()));
     }
-
-    // Indica che le credenziali non sono scadute
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    // Indica che l'account non è bloccato
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    // Indica che le credenziali non sono scadute
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    // Indica se l'account è abilitato
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }
+
+

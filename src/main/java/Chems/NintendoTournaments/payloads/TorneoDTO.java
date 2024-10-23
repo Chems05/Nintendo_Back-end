@@ -24,5 +24,9 @@ public record TorneoDTO(
         StatoTorneo statoTorneo,
 
         @NotNull(message = "Il gioco associato è obbligatorio.")
-        UUID giocoId
+        UUID giocoId,
+
+        @NotNull(message = "L'organizzatore è obbligatorio.")
+        UUID organizzatoreId  // Aggiungi questo campo
 ) {}
+

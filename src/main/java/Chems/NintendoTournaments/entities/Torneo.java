@@ -33,14 +33,17 @@ public class Torneo {
     private Utente organizzatore;
 
     @ManyToOne
-    @JoinColumn(name = "id_gioco")
+    @JoinColumn(name = "id_gioco", nullable = false) // Assicurati che questo non sia nullable nel DB
     private Gioco gioco;
 
     @OneToMany(mappedBy = "torneo")
-    private List<Partecipante> partecipanti;
+    private List<Squadra> partecipanti;
 
     public Torneo(String nomeTorneo, LocalDate dataInizio, LocalDate dataFine, int numeroMassimoPartecipanti,
                   StatoTorneo statoTorneo, Gioco gioco, Utente organizzatore) {
+        if (gioco == null) {
+            throw new IllegalArgumentException("Il campo 'gioco' non può essere nullo.");
+        }
         this.nomeTorneo = nomeTorneo;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
@@ -50,5 +53,3 @@ public class Torneo {
         this.organizzatore = organizzatore;
     }
 }
-
-
