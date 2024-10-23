@@ -1,6 +1,7 @@
 package Chems.NintendoTournaments.enums;
 
 public enum RuoloUtente {
-    USER,
-    ADMIN
+    ADMIN,
+    GIOCATORE,
+    ORGANIZZATORE
 }

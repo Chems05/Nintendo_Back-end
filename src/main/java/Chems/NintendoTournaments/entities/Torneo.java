@@ -33,20 +33,22 @@ public class Torneo {
     private Utente organizzatore;
 
     @ManyToOne
-    @JoinColumn(name = "id_gioco") // Aggiunge la chiave esterna per il gioco
-    private Gioco gioco; // Definisce la relazione ManyToOne con Gioco
+    @JoinColumn(name = "id_gioco")
+    private Gioco gioco;
 
     @OneToMany(mappedBy = "torneo")
     private List<Partecipante> partecipanti;
 
-    public Torneo(String nomeTorneo, LocalDate dataInizio, LocalDate dataFine, int numeroMassimoPartecipanti, StatoTorneo statoTorneo, Utente organizzatore) {
+    public Torneo(String nomeTorneo, LocalDate dataInizio, LocalDate dataFine, int numeroMassimoPartecipanti,
+                  StatoTorneo statoTorneo, Gioco gioco, Utente organizzatore) {
         this.nomeTorneo = nomeTorneo;
-        this.gioco = gioco;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
         this.numeroMassimoPartecipanti = numeroMassimoPartecipanti;
         this.statoTorneo = statoTorneo;
-        this.organizzatore = organizzatore; // Utilizza il valore passato
+        this.gioco = gioco;
+        this.organizzatore = organizzatore;
     }
 }
+
 

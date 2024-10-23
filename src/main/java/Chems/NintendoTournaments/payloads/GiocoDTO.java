@@ -12,5 +12,3 @@ public record GiocoDTO(
         String immagine // Rimosso sviluppatore e dataUscita
 ) {}
 
-
-
