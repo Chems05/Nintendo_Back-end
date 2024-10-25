@@ -15,12 +15,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.server.ResponseStatusException;
-
-
 import java.util.stream.Collectors;
 
 @RestController
@@ -34,14 +28,13 @@ public class AuthController {
 
     @PostMapping("/login")
     public LoginRespDTO login(@RequestBody LoginDTO payload) {
-        return new LoginRespDTO(this.authService.checkCredentialsAndGenerateToken(payload));
+        return this.authService.checkCredentialsAndGenerateToken(payload);
     }
-
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public UtenteRespDTO createUser(@RequestBody  @Validated UtenteDTO body, BindingResult validationResult) {
-        if(validationResult.hasErrors())  {
+    public UtenteRespDTO createUser(@RequestBody @Validated UtenteDTO body, BindingResult validationResult) {
+        if(validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .collect(Collectors.joining(". "));
@@ -51,4 +44,3 @@ public class AuthController {
         }
     }
 }
-

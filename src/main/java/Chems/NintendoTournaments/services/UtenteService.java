@@ -31,7 +31,7 @@ public class UtenteService {
         }
 
         Utente nuovoUtente = new Utente();
-        nuovoUtente.setUsername(utenteDTO.email()); // Supponendo che username = email
+        nuovoUtente.setUsername(utenteDTO.username());
         nuovoUtente.setEmail(utenteDTO.email());
         nuovoUtente.setPassword(passwordEncoder.encode(utenteDTO.password()));
         nuovoUtente.setRuolo(RuoloUtente.GIOCATORE); // Ruolo predefinito
@@ -52,7 +52,7 @@ public class UtenteService {
 
     // Aggiorna un utente
     public Utente updateUtente(UUID id, UtenteDTO utenteDTO) {
-        Utente utente = findById(id); // Ora passa un singolo UUID
+        Utente utente = findById(id); // Trova l'utente per ID
 
         // Controllo se l'email esiste già per un altro utente
         Optional<Utente> utenteEsistente = utenteRepository.findByEmail(utenteDTO.email());
@@ -60,8 +60,14 @@ public class UtenteService {
             throw new BadRequestException("Email già in uso!");
         }
 
-        utente.setUsername(utenteDTO.email());
+        // Aggiorna solo l'email
         utente.setEmail(utenteDTO.email());
+
+        // Aggiorna lo username solo se viene fornito
+        if (utenteDTO.username() != null && !utenteDTO.username().isEmpty()) {
+            utente.setUsername(utenteDTO.username());
+        }
+
         // Cambia solo la password se non è nulla o vuota
         if (utenteDTO.password() != null && !utenteDTO.password().isEmpty()) {
             utente.setPassword(passwordEncoder.encode(utenteDTO.password()));

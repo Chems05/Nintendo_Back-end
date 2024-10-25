@@ -3,6 +3,7 @@ package Chems.NintendoTournaments.services;
 import Chems.NintendoTournaments.entities.Utente;
 import Chems.NintendoTournaments.exceptions.UnauthorizedException;
 import Chems.NintendoTournaments.payloads.LoginDTO;
+import Chems.NintendoTournaments.payloads.LoginRespDTO;
 import Chems.NintendoTournaments.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,15 +20,14 @@ public class AuthService {
     @Autowired
     private PasswordEncoder bcrypt;
 
-    public String checkCredentialsAndGenerateToken(LoginDTO body) {
-
+    public LoginRespDTO checkCredentialsAndGenerateToken(LoginDTO body) {
         Utente found = this.utenteService.trovaUtentePerEmail(body.email());
         if (bcrypt.matches(body.password(), found.getPassword())) {
-            return jwtUtil.createToken(found);
+            String token = jwtUtil.createToken(found);
+            return new LoginRespDTO(token, found.getId()); // Usa found.getId() per l'employeeId
         } else {
             throw new UnauthorizedException("Credenziali errate!");
         }
-
-
     }
+
 }

@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "utenti")
@@ -32,17 +33,14 @@ public class Utente implements UserDetails {
     private RuoloUtente ruolo;
 
     @OneToMany(mappedBy = "organizzatore")
+    @JsonManagedReference // Aggiungi questa annotazione per gestire la relazione
     private List<Torneo> torneiOrganizzati;
 
     @ManyToMany(mappedBy = "giocatori")  // Relazione ManyToMany per le partecipazioni
     private List<Squadra> partecipazioni;
 
-    // Metodo per ottenere le autorità (ruoli) dell'utente
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Restituisci l'autorità in base al ruolo dell'utente
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + ruolo.name()));
     }
 }
-
-

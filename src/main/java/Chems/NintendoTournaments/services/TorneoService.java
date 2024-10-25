@@ -36,11 +36,9 @@ public class TorneoService {
             throw new BadRequestException("Il torneo deve avere un body!");
         }
 
-
         UUID giocoId = torneoDTO.giocoId();
         Gioco gioco = giocoRepository.findById(giocoId)
                 .orElseThrow(() -> new NotFoundException("Gioco non trovato con ID: " + giocoId));
-
 
         UUID organizzatoreId = torneoDTO.organizzatoreId();
         Utente organizzatore = utenteRepository.findById(organizzatoreId)
@@ -53,7 +51,8 @@ public class TorneoService {
                 torneoDTO.numeroMassimoPartecipanti(),
                 torneoDTO.statoTorneo(),
                 gioco,
-                organizzatore
+                organizzatore,
+                torneoDTO.descrizione() // Includi la descrizione
         );
         return torneoRepository.save(torneo);
     }
@@ -63,9 +62,6 @@ public class TorneoService {
                 .orElseThrow(() -> new NotFoundException("Torneo non trovato con ID: " + torneoId));
     }
 
-    public List<Torneo> findAll() {
-        return torneoRepository.findAll();
-    }
 
     public Page<Torneo> findAll(int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
@@ -79,6 +75,7 @@ public class TorneoService {
         found.setDataFine(torneoDTO.dataFine());
         found.setNumeroMassimoPartecipanti(torneoDTO.numeroMassimoPartecipanti());
         found.setStatoTorneo(torneoDTO.statoTorneo());
+        found.setDescrizione(torneoDTO.descrizione()); // Aggiorna la descrizione
         return torneoRepository.save(found);
     }
 

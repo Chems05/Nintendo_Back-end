@@ -5,6 +5,8 @@ import lombok.*;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "giochi")
 @Setter
@@ -30,6 +32,7 @@ public class Gioco {
     private String immagine;
 
     @OneToMany(mappedBy = "gioco", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore // Ignora i tornei durante la serializzazione JSON se non necessario
     private List<Torneo> tornei;
 
     public Gioco(String nome, String genere, String descrizione, String immagine) {
@@ -39,4 +42,5 @@ public class Gioco {
         this.immagine = immagine;
     }
 }
+
 

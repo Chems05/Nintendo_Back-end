@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -20,6 +21,12 @@ public class GiocoController {
     public ResponseEntity<Gioco> createGioco(@RequestBody GiocoDTO giocoDTO) {
         Gioco createdGioco = giocoService.saveGioco(giocoDTO);
         return ResponseEntity.status(201).body(createdGioco);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<GiocoDTO>> getAllGiochi() {
+        List<GiocoDTO> giochi = giocoService.findAll();
+        return ResponseEntity.ok(giochi);
     }
 
     @GetMapping("/{id}")
@@ -40,6 +47,3 @@ public class GiocoController {
         return ResponseEntity.noContent().build();
     }
 }
-
-
-

@@ -4,10 +4,11 @@ import Chems.NintendoTournaments.entities.Torneo;
 import Chems.NintendoTournaments.payloads.TorneoDTO;
 import Chems.NintendoTournaments.services.TorneoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -18,7 +19,7 @@ public class TorneoController {
     private TorneoService torneoService;
 
     @PostMapping
-    public ResponseEntity<Torneo> createTorneo(@RequestBody TorneoDTO torneoDTO) {
+    public ResponseEntity<Torneo> createTorneo(@RequestBody TorneoDTO torneoDTO, @AuthenticationPrincipal String username) {
         Torneo createdTorneo = torneoService.saveTorneo(torneoDTO);
         return ResponseEntity.status(201).body(createdTorneo);
     }
@@ -29,9 +30,13 @@ public class TorneoController {
         return ResponseEntity.ok(torneo);
     }
 
+    // Modifica il metodo per supportare paginazione
     @GetMapping
-    public ResponseEntity<List<Torneo>> getAllTornei() {
-        List<Torneo> tornei = torneoService.findAll();
+    public ResponseEntity<Page<Torneo>> getAllTornei(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "dataInizio") String sortBy) {
+        Page<Torneo> tornei = torneoService.findAll(page, size, sortBy);
         return ResponseEntity.ok(tornei);
     }
 
@@ -47,4 +52,3 @@ public class TorneoController {
         return ResponseEntity.noContent().build();
     }
 }
-
