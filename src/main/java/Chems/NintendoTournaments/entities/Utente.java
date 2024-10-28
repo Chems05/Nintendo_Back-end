@@ -28,19 +28,50 @@ public class Utente implements UserDetails {
     private String username;
     private String email;
     private String password;
+    private String avatar;
 
     @Enumerated(EnumType.STRING)
     private RuoloUtente ruolo;
 
     @OneToMany(mappedBy = "organizzatore")
-    @JsonManagedReference // Aggiungi questa annotazione per gestire la relazione
+    @JsonManagedReference
     private List<Torneo> torneiOrganizzati;
 
-    @ManyToMany(mappedBy = "giocatori")  // Relazione ManyToMany per le partecipazioni
+    @ManyToMany(mappedBy = "giocatori")
     private List<Squadra> partecipazioni;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + ruolo.name()));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
     }
 }

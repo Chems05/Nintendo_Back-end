@@ -21,7 +21,7 @@ public class Squadra {
     private String nome;
 
     @ManyToOne
-    @JoinColumn(name = "id_torneo", nullable = false)  // Assicurati che non sia nullable nel DB
+    @JoinColumn(name = "id_torneo", nullable = false)
     private Torneo torneo;
 
     @ManyToMany
@@ -31,7 +31,6 @@ public class Squadra {
             inverseJoinColumns = @JoinColumn(name = "utente_id")
     )
     private List<Utente> giocatori;
-
 
     public Squadra(String nome, Torneo torneo) {
         if (torneo == null) {

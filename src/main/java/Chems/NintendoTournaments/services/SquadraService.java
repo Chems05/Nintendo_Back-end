@@ -29,19 +29,16 @@ public class SquadraService {
     @Autowired
     private TorneoRepository torneoRepository;
 
-    // Creazione di una nuova squadra
     public Squadra saveSquadra(SquadraDTO squadraDTO) {
         Squadra nuovaSquadra = new Squadra();
         nuovaSquadra.setNome(squadraDTO.nome());
 
-        // Aggiungere il torneo associato
         if (squadraDTO.torneoId() != null) {
             Torneo torneo = torneoRepository.findById(squadraDTO.torneoId())
                     .orElseThrow(() -> new NotFoundException("Torneo non trovato con ID: " + squadraDTO.torneoId()));
-            nuovaSquadra.setTorneo(torneo); // Associa il torneo alla squadra
+            nuovaSquadra.setTorneo(torneo);
         }
 
-        // Aggiungere i giocatori alla squadra
         if (squadraDTO.giocatori() != null) {
             List<Utente> giocatori = utenteRepository.findAllById(
                     squadraDTO.giocatori().stream()
@@ -49,7 +46,6 @@ public class SquadraService {
                             .toList()
             );
 
-            // Controlla se ci sono utenti non trovati
             if (giocatori.size() != squadraDTO.giocatori().size()) {
                 throw new BadRequestException("Uno o più utenti non esistono!");
             }
@@ -59,38 +55,32 @@ public class SquadraService {
         return squadraRepository.save(nuovaSquadra);
     }
 
-    // Trova una squadra per ID
     public Squadra findById(@NotNull UUID id) {
         return squadraRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Squadra con ID " + id + " non trovata."));
     }
 
-    // Trova tutte le squadre
     public List<Squadra> findAll() {
         return squadraRepository.findAll();
     }
 
-    // Aggiorna una squadra
     public Squadra updateSquadra(UUID id, SquadraDTO squadraDTO) {
         Squadra squadra = findById(id);
         squadra.setNome(squadraDTO.nome());
 
-        // Aggiungere/aggiornare il torneo associato
         if (squadraDTO.torneoId() != null) {
             Torneo torneo = torneoRepository.findById(squadraDTO.torneoId())
                     .orElseThrow(() -> new NotFoundException("Torneo non trovato con ID: " + squadraDTO.torneoId()));
-            squadra.setTorneo(torneo); // Aggiorna il torneo associato alla squadra
+            squadra.setTorneo(torneo);
         }
 
-        // Aggiungere/aggiornare i giocatori nella squadra
         if (squadraDTO.giocatori() != null) {
             List<Utente> giocatori = utenteRepository.findAllById(
-                    squadraDTO.giocatori().stream() // Chiamato su un'istanza di squadraDTO
+                    squadraDTO.giocatori().stream()
                             .map(UtenteDTO::id)
                             .toList()
             );
 
-            // Controlla se ci sono utenti non trovati
             if (giocatori.size() != squadraDTO.giocatori().size()) {
                 throw new BadRequestException("Uno o più utenti non esistono!");
             }
@@ -100,9 +90,17 @@ public class SquadraService {
         return squadraRepository.save(squadra);
     }
 
-    // Elimina una squadra
     public void deleteSquadra(UUID id) {
         Squadra squadra = findById(id);
         squadraRepository.delete(squadra);
+    }
+
+    public boolean isOwner(UUID squadraId, String username) {
+        Squadra squadra = findById(squadraId);
+        Torneo torneo = squadra.getTorneo();
+        if (torneo != null) {
+            return torneo.getOrganizzatore().getUsername().equals(username);
+        }
+        return false;
     }
 }

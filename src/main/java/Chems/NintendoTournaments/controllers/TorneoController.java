@@ -1,6 +1,7 @@
 package Chems.NintendoTournaments.controllers;
 
 import Chems.NintendoTournaments.entities.Torneo;
+import Chems.NintendoTournaments.entities.Utente;
 import Chems.NintendoTournaments.payloads.TorneoDTO;
 import Chems.NintendoTournaments.services.TorneoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class TorneoController {
     private TorneoService torneoService;
 
     @PostMapping
-    public ResponseEntity<Torneo> createTorneo(@RequestBody TorneoDTO torneoDTO, @AuthenticationPrincipal String username) {
+    public ResponseEntity<Torneo> createTorneo(@RequestBody TorneoDTO torneoDTO, @AuthenticationPrincipal Utente utenteAutenticato) {
         Torneo createdTorneo = torneoService.saveTorneo(torneoDTO);
         return ResponseEntity.status(201).body(createdTorneo);
     }
@@ -30,7 +31,6 @@ public class TorneoController {
         return ResponseEntity.ok(torneo);
     }
 
-    // Modifica il metodo per supportare paginazione
     @GetMapping
     public ResponseEntity<Page<Torneo>> getAllTornei(
             @RequestParam(defaultValue = "0") int page,
@@ -41,14 +41,19 @@ public class TorneoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Torneo> updateTorneo(@PathVariable UUID id, @RequestBody TorneoDTO torneoDTO) {
-        Torneo updatedTorneo = torneoService.updateTorneo(id, torneoDTO);
+    public ResponseEntity<Torneo> updateTorneo(
+            @PathVariable UUID id,
+            @RequestBody TorneoDTO torneoDTO,
+            @AuthenticationPrincipal Utente utenteAutenticato) {
+        Torneo updatedTorneo = torneoService.updateTorneo(id, torneoDTO, utenteAutenticato);
         return ResponseEntity.ok(updatedTorneo);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTorneo(@PathVariable UUID id) {
-        torneoService.deleteTorneo(id);
+    public ResponseEntity<Void> deleteTorneo(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal Utente utenteAutenticato) {
+        torneoService.deleteTorneo(id, utenteAutenticato);
         return ResponseEntity.noContent().build();
     }
 }

@@ -33,7 +33,7 @@ public class Torneo {
 
     @ManyToOne
     @JoinColumn(name = "id_organizzatore")
-    @JsonBackReference // Aggiungi questa annotazione per evitare ricorsione
+    @JsonBackReference
     private Utente organizzatore;
 
     @ManyToOne

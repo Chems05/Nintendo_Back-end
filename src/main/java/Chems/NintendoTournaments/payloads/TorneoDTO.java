@@ -30,5 +30,5 @@ public record TorneoDTO(
         UUID organizzatoreId,
 
         @NotEmpty(message = "La descrizione è obbligatoria.")
-        String descrizione // Nuovo campo per la descrizione
+        String descrizione
 ) {}
