@@ -5,8 +5,6 @@ import Chems.NintendoTournaments.payloads.SquadraDTO;
 import Chems.NintendoTournaments.services.SquadraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,35 +17,38 @@ public class SquadraController {
     @Autowired
     private SquadraService squadraService;
 
+    // Crea una nuova squadra
     @PostMapping
     public ResponseEntity<Squadra> createSquadra(@RequestBody SquadraDTO squadraDTO) {
-        Squadra createdSquadra = squadraService.saveSquadra(squadraDTO);
-        return ResponseEntity.status(201).body(createdSquadra);
+        Squadra nuovaSquadra = squadraService.saveSquadra(squadraDTO);
+        return ResponseEntity.status(201).body(nuovaSquadra);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Squadra> getSquadraById(@PathVariable UUID id) {
-        Squadra squadra = squadraService.findById(id);
-        return ResponseEntity.ok(squadra);
-    }
-
+    // Ottieni tutte le squadre
     @GetMapping
     public ResponseEntity<List<Squadra>> getAllSquadre() {
         List<Squadra> squadre = squadraService.findAll();
         return ResponseEntity.ok(squadre);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('ORGANIZZATORE') and @squadraService.isOwner(#id, #username))")
-    @PutMapping("/{id}")
-    public ResponseEntity<Squadra> updateSquadra(@PathVariable UUID id, @RequestBody SquadraDTO squadraDTO, @AuthenticationPrincipal String username) {
-        Squadra updatedSquadra = squadraService.updateSquadra(id, squadraDTO);
-        return ResponseEntity.ok(updatedSquadra);
+    // Ottieni una squadra per ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Squadra> getSquadraById(@PathVariable UUID id) {
+        Squadra squadra = squadraService.findById(id);
+        return ResponseEntity.ok(squadra);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('ORGANIZZATORE') and @squadraService.isOwner(#id, #username))")
+    // Elimina una squadra per ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSquadra(@PathVariable UUID id, @AuthenticationPrincipal String username) {
+    public ResponseEntity<Void> deleteSquadra(@PathVariable UUID id) {
         squadraService.deleteSquadra(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Ottieni tutte le squadre per un torneo specifico
+    @GetMapping("/tornei/{torneoId}")
+    public ResponseEntity<List<Squadra>> getSquadreByTorneo(@PathVariable UUID torneoId) {
+        List<Squadra> squadre = squadraService.findAllByTorneo(torneoId);
+        return ResponseEntity.ok(squadre);
     }
 }

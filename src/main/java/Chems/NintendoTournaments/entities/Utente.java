@@ -37,8 +37,6 @@ public class Utente implements UserDetails {
     @JsonManagedReference
     private List<Torneo> torneiOrganizzati;
 
-    @ManyToMany(mappedBy = "giocatori")
-    private List<Squadra> partecipazioni;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

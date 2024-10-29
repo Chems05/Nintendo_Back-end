@@ -4,8 +4,8 @@ import Chems.NintendoTournaments.enums.StatoTorneo;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
@@ -40,8 +40,8 @@ public class Torneo {
     @JoinColumn(name = "id_gioco", nullable = false)
     private Gioco gioco;
 
-    @OneToMany(mappedBy = "torneo")
-    private List<Squadra> partecipanti;
+    @OneToMany(mappedBy = "torneo", cascade = CascadeType.ALL) // orphansRemoval removed
+    private List<Squadra> squadre;
 
     public Torneo(String nomeTorneo, LocalDate dataInizio, LocalDate dataFine, int numeroMassimoPartecipanti,
                   StatoTorneo statoTorneo, Gioco gioco, Utente organizzatore, String descrizione) {
